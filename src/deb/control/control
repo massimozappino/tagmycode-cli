@@ -1,0 +1,10 @@
+Package: [[name]]
+Version: [[version]]
+Section: utils
+Priority: optional
+Homepage: https://tagmycode.com
+Architecture: all
+License: Apache-2.0
+Depends: sun-java6-jre | openjdk-6-jre | openjdk-7-jre | openjdk-6-jre-headless | openjdk-7-jre-headless
+Maintainer: Massimo Zappino <massimo.zappino@gmail.com>
+Description: TagMyCode Command Line

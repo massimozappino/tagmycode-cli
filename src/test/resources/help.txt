@@ -1,0 +1,8 @@
+usage: tmc
+ -a,--add <filename>   Create a snippet from file
+ -h,--help             Show help message
+    --info             Show account information
+ -l,--languages        Show languages
+    --login            Authenticate to TagMyCode.com
+ -p,--private          Set the snippet private
+ -v,--version          Display version information

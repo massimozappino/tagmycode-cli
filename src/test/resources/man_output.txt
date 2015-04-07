@@ -1,0 +1,28 @@
+tmc(1)                           tmc man page                           tmc(1)
+
+
+
+NAME
+       tmc - tagmycode-cli
+
+SYNOPSIS
+       tmc [options]
+
+DESCRIPTION
+       Tmc - TagMyCode-Cli is a tool
+
+OPTIONS
+@@@INDENTED_HELP@@@
+
+BUGS
+       No known bugs.
+
+HOMEPAGE
+       https://tagmycode.com
+
+AUTHOR
+       Massimo Zappino (massimo.zappino@gmail.com)
+
+
+
+0.1-SNAPSHOT                      22 Mar 2015                           tmc(1)

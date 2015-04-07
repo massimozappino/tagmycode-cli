@@ -1,2 +1,21 @@
-# TagMyCode Cli #
-Read here: http://blog.tagmycode.com/2015/03/31/development-of-tagmycode-cli-has-started
+# Compile #
+
+```
+#!bash
+
+./compile.sh
+```
+
+
+#Run#
+
+```
+#!bash
+
+cd target/tmc/bin
+./tmc
+```
+
+
+#Deb Package#
+Debian package is located under ```target``` directory
