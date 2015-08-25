@@ -7,7 +7,6 @@
 ```
 #!bash
 ./create-secret-file.sh
-./install-dependencies.sh
 ./compile.sh
 ```
 
