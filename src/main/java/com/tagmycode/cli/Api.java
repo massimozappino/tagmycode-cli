@@ -2,9 +2,8 @@ package com.tagmycode.cli;
 
 import com.tagmycode.sdk.Client;
 import com.tagmycode.sdk.TagMyCode;
-import com.tagmycode.sdk.exception.TagMyCodeConnectionException;
 import com.tagmycode.sdk.exception.TagMyCodeException;
-import com.tagmycode.sdk.model.LanguageCollection;
+import com.tagmycode.sdk.model.LanguagesCollection;
 import com.tagmycode.sdk.model.Snippet;
 import com.tagmycode.sdk.model.User;
 
@@ -13,14 +12,14 @@ import java.io.IOException;
 public class Api {
     private final TagMyCode tagMyCode;
 
-    public Api(TagMyCode tagMyCode, Config config) {
+    public Api(TagMyCode tagMyCode, OauthWallet wallet) throws TagMyCodeException {
         this.tagMyCode = tagMyCode;
-        config.createDirectory();
-        tagMyCode.getClient().setWallet(config);
-        tagMyCode.getClient().setOauthToken(config.loadAccessToken());
+        wallet.createDirectory();
+        tagMyCode.getClient().setWallet(wallet);
+        tagMyCode.getClient().setOauthToken(wallet.loadOauthToken());
     }
 
-    public LanguageCollection fetchLanguages() throws TagMyCodeException {
+    public LanguagesCollection fetchLanguages() throws TagMyCodeException {
         return tagMyCode.fetchLanguages();
     }
 
@@ -32,7 +31,7 @@ public class Api {
         return tagMyCode.getClient();
     }
 
-    public void authorizeWithVerificationCode(String code) throws TagMyCodeConnectionException {
+    public void authorizeWithVerificationCode(String code) throws TagMyCodeException {
         getClient().fetchOauthToken(code);
     }
 

@@ -1,11 +1,13 @@
 package com.tagmycode.cli;
 
+import com.tagmycode.cli.support.FakeSecret;
 import com.tagmycode.sdk.Client;
 import com.tagmycode.sdk.TagMyCode;
 import com.tagmycode.sdk.authentication.OauthToken;
-import com.tagmycode.sdk.model.LanguageCollection;
+import com.tagmycode.sdk.model.LanguagesCollection;
 import com.tagmycode.sdk.model.Snippet;
 import com.tagmycode.sdk.model.User;
+import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import support.ResourceGenerate;
@@ -15,9 +17,16 @@ import static org.mockito.Mockito.*;
 
 public class ApiTest {
 
+    private ResourceGenerate resourceGenerate;
+
+    @Before
+    public void initialize() {
+        resourceGenerate = new ResourceGenerate();
+    }
+
     @Test
     public void configCreateDirectoryInConstructor() throws Exception {
-        Config configMock = createConfigMock();
+        OauthWallet configMock = createConfigMock();
         when(configMock.createDirectory()).thenThrow(new RuntimeException());
         try {
             spy(new Api(createTagMyCodeMock(), configMock));
@@ -31,11 +40,11 @@ public class ApiTest {
     public void fetchLanguages() throws Exception {
         Client clientMock = createClientMock();
         TagMyCode tagMyCodeMock = createTagMyCodeMock(clientMock);
-        LanguageCollection expectedLanguages = new ResourceGenerate().aLanguageCollection();
+        LanguagesCollection expectedLanguages = new ResourceGenerate().aLanguageCollection();
         when(tagMyCodeMock.fetchLanguages()).thenReturn(expectedLanguages);
         Api apiSpy = spy(new Api(tagMyCodeMock, createConfigMock()));
 
-        LanguageCollection actualLanguages = apiSpy.fetchLanguages();
+        LanguagesCollection actualLanguages = apiSpy.fetchLanguages();
 
         verify(tagMyCodeMock).fetchLanguages();
         assertEquals(expectedLanguages, actualLanguages);
@@ -44,7 +53,7 @@ public class ApiTest {
     @Test
     public void fetchAccount() throws Exception {
         TagMyCode tagMyCodeMock = createTagMyCodeMock();
-        User expectedUser = new ResourceGenerate().anUser();
+        User expectedUser = resourceGenerate.aUser();
         when(tagMyCodeMock.fetchAccount()).thenReturn(expectedUser);
         Api apiSpy = spy(new Api(tagMyCodeMock, createConfigMock()));
 
@@ -105,7 +114,7 @@ public class ApiTest {
         Client clientMock = createClientMock();
         when(tagMyCodeMock.getClient()).thenReturn(clientMock);
         when(clientMock.getOauthToken()).thenReturn(oauthToken);
-        Config configMock = createConfigMock();
+        OauthWallet configMock = createConfigMock();
         Api apiSpy = spy(new Api(tagMyCodeMock, configMock));
 
         apiSpy.authorizeWithVerificationCode("myCode");
@@ -131,13 +140,13 @@ public class ApiTest {
 
     @Test
     public void authenticationDependsOnConfig() throws Exception {
-        Client client = new Client("123", "456");
-        Config configMock = createConfigMock();
-        when(configMock.loadAccessToken()).thenReturn(new OauthToken("123", "456"));
+        OauthWallet oauthWalletMock = createConfigMock();
+        Client client = new Client(new FakeSecret(), oauthWalletMock);
+        when(oauthWalletMock.loadOauthToken()).thenReturn(new OauthToken("123", "456"));
 
-        Api api = new Api(new TagMyCode(client), configMock);
+        Api api = new Api(new TagMyCode(client), oauthWalletMock);
 
-        verify(configMock, times(1)).loadAccessToken();
+        verify(oauthWalletMock, times(1)).loadOauthToken();
         assertEquals(true, api.isAuthenticated());
     }
 
@@ -155,8 +164,8 @@ public class ApiTest {
         return mock(Client.class);
     }
 
-    private Config createConfigMock() {
-        return mock(Config.class);
+    private OauthWallet createConfigMock() {
+        return mock(OauthWallet.class);
     }
 
 }

@@ -1,8 +1,9 @@
 package com.tagmycode.cli;
 
-public class TmcSaveTokenException extends Exception {
-    @Override
-    public String getMessage() {
-        return "There was an error saving account information";
+import com.tagmycode.sdk.exception.TagMyCodeException;
+
+public class TmcSaveTokenException extends TagMyCodeException {
+    public TmcSaveTokenException() {
+        super("There was an error saving account information");
     }
 }

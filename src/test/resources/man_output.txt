@@ -1,7 +1,5 @@
 tmc(1)                           tmc man page                           tmc(1)
 
-
-
 NAME
        tmc - tagmycode-cli
 
@@ -22,7 +20,5 @@ HOMEPAGE
 
 AUTHOR
        Massimo Zappino (massimo.zappino@gmail.com)
-
-
 
 0.1-SNAPSHOT                      22 Mar 2015                           tmc(1)

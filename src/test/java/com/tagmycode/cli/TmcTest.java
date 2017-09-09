@@ -125,7 +125,7 @@ public class TmcTest extends BaseTest {
         Api apiMock = mock(Api.class);
         ReadInput readInputMock = mock(ReadInput.class);
         when(apiMock.fetchLanguages()).thenReturn(new ResourceGenerate().aLanguageCollection());
-        when(apiMock.fetchAccount()).thenReturn(new ResourceGenerate().anUser());
+        when(apiMock.fetchAccount()).thenReturn(new ResourceGenerate().aUser());
         when(apiMock.getAuthorizationUrl()).thenReturn("https://tagmycode.com/oauth2/authorize?client_id=mockedUrl");
         when(readInputMock.read()).thenReturn("myAuthCode");
 
@@ -146,7 +146,7 @@ public class TmcTest extends BaseTest {
         Tmc tmc = createTMCWithArguments("--info");
         Api apiMock = mock(Api.class);
 
-        when(apiMock.fetchAccount()).thenReturn(new ResourceGenerate().anUser());
+        when(apiMock.fetchAccount()).thenReturn(new ResourceGenerate().aUser());
         tmc.setApi(apiMock);
         tmc.parse();
 

@@ -12,14 +12,14 @@ import static org.junit.Assert.*;
 public class ConfigTest {
     @Test
     public void getPath() {
-        Config config = new Config();
+        OauthWallet config = new OauthWallet();
         String expectedString = System.getProperty("user.home") + File.separator + ".tagmycode";
         assertEquals(expectedString, config.getDirectoryPath());
     }
 
     @Test
     public void createDirectory() {
-        Config config = getTestConfig();
+        OauthWallet config = getTestOauthWallet();
         config.createDirectory();
         File directory = new File(config.getDirectoryPath());
         assertTrue(directory.exists());
@@ -27,10 +27,10 @@ public class ConfigTest {
 
     @Test
     public void saveAccessToken() throws Exception {
-        Config config = getTestConfig();
+        OauthWallet oauthWallet = getTestOauthWallet();
         OauthToken accessToken = new OauthToken("123", "456");
-        config.saveAccessToken(accessToken);
-        OauthToken loadedOauthToken = config.loadAccessToken();
+        oauthWallet.saveOauthToken(accessToken);
+        OauthToken loadedOauthToken = oauthWallet.loadOauthToken();
         assertEquals(accessToken.getAccessToken(), loadedOauthToken.getAccessToken());
         assertEquals(accessToken.getRefreshToken(), loadedOauthToken.getRefreshToken());
     }
@@ -38,36 +38,36 @@ public class ConfigTest {
     @SuppressWarnings("ResultOfMethodCallIgnored")
     @Test
     public void saveAccessTokenOnNotValidFileThrowsException() throws IOException {
-        Config config = getTestConfig();
+        OauthWallet oauthWallet = getTestOauthWallet();
 
         // simulate non writable oauthFileName
-        String directoryPath = config.getDirectoryPath();
-        File file = new File(directoryPath + File.separator + config.getOauthFileName());
+        String directoryPath = oauthWallet.getDirectoryPath();
+        File file = new File(directoryPath + File.separator + oauthWallet.getOauthFileName());
         file.createNewFile();
         file.setWritable(false);
 
         try {
-            config.saveAccessToken(new OauthToken("123", "456"));
+            oauthWallet.saveOauthToken(new OauthToken("123", "456"));
             fail("Exception expected");
         } catch (Exception e) {
-            assertNull(config.loadAccessToken());
+            assertNull(oauthWallet.loadOauthToken());
         }
     }
 
     @Test
     public void loadInvalidAccessToken() throws Exception {
-        Config config = getTestConfig();
-        config.writeFile(config.getOauthFileName(), "one line");
-        assertNull(config.loadAccessToken());
+        OauthWallet oauthWallet = getTestOauthWallet();
+        oauthWallet.writeFile(oauthWallet.getOauthFileName(), "one line");
+        assertNull(oauthWallet.loadOauthToken());
 
-        config.writeFile(config.getOauthFileName(), System.getProperty("line.separator"));
-        assertNull(config.loadAccessToken());
+        oauthWallet.writeFile(oauthWallet.getOauthFileName(), System.getProperty("line.separator"));
+        assertNull(oauthWallet.loadOauthToken());
     }
 
-    private Config getTestConfig() {
+    private OauthWallet getTestOauthWallet() {
         File tempDir = Files.createTempDir();
 
-        return new Config(tempDir.getPath());
+        return new OauthWallet(tempDir.getPath());
     }
 }
 

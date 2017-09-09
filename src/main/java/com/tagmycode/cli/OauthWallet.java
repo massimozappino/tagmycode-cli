@@ -1,21 +1,22 @@
 package com.tagmycode.cli;
 
-import com.tagmycode.sdk.IWallet;
+import com.tagmycode.sdk.IOauthWallet;
 import com.tagmycode.sdk.authentication.OauthToken;
+import com.tagmycode.sdk.exception.TagMyCodeException;
 import org.apache.commons.io.IOUtils;
 
 import java.io.*;
 
-public class Config implements IWallet {
+public class OauthWallet implements IOauthWallet {
     private static final String LINE_SEPARATOR = System.getProperty("line.separator");
     private String path;
 
-    public Config() {
+    public OauthWallet() {
         String userHome = System.getProperty("user.home");
         path = userHome + File.separator + ".tagmycode";
     }
 
-    public Config(String path) {
+    public OauthWallet(String path) {
         this.path = path;
     }
 
@@ -23,14 +24,8 @@ public class Config implements IWallet {
         return path;
     }
 
-    public void saveAccessToken(OauthToken accessToken) throws TmcSaveTokenException {
-       if (!saveOauthToken(accessToken)) {
-           throw new TmcSaveTokenException();
-       }
-    }
-
     @Override
-    public boolean saveOauthToken(OauthToken oauthToken) {
+    public void saveOauthToken(OauthToken oauthToken) throws TmcSaveTokenException {
         String fileName = getOauthFileName();
         String fileContent = oauthToken.getAccessToken().getToken()
                 + LINE_SEPARATOR
@@ -38,9 +33,13 @@ public class Config implements IWallet {
         try {
             writeFile(fileName, fileContent);
         } catch (IOException e) {
-            return false;
+            throw new TmcSaveTokenException();
         }
-        return true;
+    }
+
+    @Override
+    public void deleteOauthToken() throws TagMyCodeException {
+
     }
 
     protected String getOauthFileName() {
@@ -48,7 +47,7 @@ public class Config implements IWallet {
     }
 
     @SuppressWarnings("ResultOfMethodCallIgnored")
-    protected Void writeFile(String fileName, String fileContent) throws IOException {
+    void writeFile(String fileName, String fileContent) throws IOException {
         File file = new File(getFilePath(fileName));
 
         if (!file.exists()) {
@@ -57,10 +56,10 @@ public class Config implements IWallet {
         BufferedWriter writer = new BufferedWriter(new FileWriter(file));
         writer.write(fileContent);
         writer.close();
-        return null;
     }
 
-    public OauthToken loadAccessToken() {
+    @Override
+    public OauthToken loadOauthToken() {
         OauthToken oauthToken = null;
         try {
             String fileName = getOauthFileName();

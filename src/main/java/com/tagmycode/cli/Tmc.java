@@ -4,7 +4,7 @@ import com.tagmycode.sdk.Client;
 import com.tagmycode.sdk.TagMyCode;
 import com.tagmycode.sdk.exception.TagMyCodeException;
 import com.tagmycode.sdk.model.Language;
-import com.tagmycode.sdk.model.LanguageCollection;
+import com.tagmycode.sdk.model.LanguagesCollection;
 import com.tagmycode.sdk.model.User;
 import org.apache.commons.cli.*;
 
@@ -28,9 +28,11 @@ public class Tmc {
         System.exit(tmc.getExitStatus());
     }
 
-    public Tmc(String[] args) {
+    public Tmc(String[] args) throws TagMyCodeException {
         this.args = args;
-        this.api = new Api(new TagMyCode(new Client(new Secret())), new Config());
+        OauthWallet wallet = new OauthWallet();
+        Client client = new Client(new Secret(), wallet);
+        this.api = new Api(new TagMyCode(client), wallet);
         this.readInput = new ReadInput(System.in);
         configureOptions();
     }
@@ -69,7 +71,7 @@ public class Tmc {
             }
 
             if (cmd.hasOption("l")) {
-                LanguageCollection languages = api.fetchLanguages();
+                LanguagesCollection languages = api.fetchLanguages();
                 for (Language language : languages) {
                     printOutput(String.format("%s - %s\n", language.getName(), language.getCode()), false);
                 }
