@@ -4,7 +4,7 @@
 
 ## Compile ##
 
-```
+```bash
 #!bash
 ./create-secret-file.sh
 ./compile.sh
@@ -13,7 +13,7 @@
 
 ## Run
 
-```
+```bash
 #!bash
 
 cd target/tmc/bin
